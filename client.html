@@ -7,6 +7,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script> 
 $(function(){
+    getList();
+
     // 동기방식 업로드
     $($("button")[0]).click(function(){
         regist();
@@ -29,19 +31,46 @@ function regist(){
 
 //등록함수
 function registAsync(){
-    //비동기 업로드 코드 작성....
+    //비동기 업로드 코드 작성....   
+    var  formData = new FormData();
 
-    //콜백함수에서 목록 호출!!
-    getList();
+    //파라미터 추가하기!!
+    formData.append("title", $("#title").val());
+    formData.append("myFile", $("input[name='myFile']")[0].files[0]);
+    $.ajax({
+        url:"/regist", 
+        processData:false, 
+        contentType:false,
+        type:"post",
+        data: formData,
+        success:function(result){
+            //alert(result);
+            //콜백함수에서 목록 호출!!
+            getList();
+        }
+    });
 }
 
 //목록 출력 
 function getList(){
-    //동적 부착!!
-    var gallery = new Gallery( 
-        document.getElementById("content") ,
-        "./images/bird.png",
-        "클래스를 이용한 동적객체 앵그리 버드");
+    document.getElementById("content").innerText="";
+    
+    //비동기로 리스트 요청!!!
+    $.ajax({
+        url:"/list", 
+        type:"get", 
+        success:function(result){
+            //alert(result.list.length);
+            for(var i=0;i<result.list.length;i++){
+                var json = result.list[i];
+                var content = document.getElementById("content");
+                //동적 부착!!
+                var gallery = new Gallery( content,"./data/"+json.filename,json.title);            
+                }
+        }
+    });
+
+
 }
 </script>    
 </head>
