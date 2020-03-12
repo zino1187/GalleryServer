@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>    
+<style>
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>  
+<script>
+//HTML 페이지이기는 하지만, 서버측으로 부터 게시판 목록을 비동기로 
+//요청하자 ( 서버는 중립적인 xml, json 으로 줄것이다.. )
+$(function(){
+    getList();
+}); 
+
+function getList(){
+    $.ajax({
+        url:"/list", 
+        type:"get",
+        success:function(result){
+            //원래는 객체화 시켜 출력해야 하지만, 피곤하므로 
+            //문자열로 출력하자!!
+            var tag="";
+            tag +="<table width=\"100%\" border=\"1px\">";
+            tag +="<tr>";
+            tag +="<td width=\"5%\">No</td>";
+            tag +="<td width=\"15%\">이미지</td>";
+            tag +="<td width=\"60%\">제목</td>";
+            tag +="<td width=\"20%\">등록일</td>";
+            tag +="</tr>";
+             
+            var total = result.list.length;
+
+            for(var i=0;i<result.list.length;i++){
+                var json = result.list[i];
+                tag +="<tr>";
+                tag +="<td>"+(total--) +"</td>";
+                tag +="<td><img width=\"30px\" src=\"/data/"+json.filename+"\"></td>";
+                tag +="<td>"+json.title+"</td>";
+                tag +="<td>"+json.regdate.substring(0,10)+"</td>";
+                tag +="</tr>";
+            }
+            tag +="</table>";   
+            document.querySelector("#content").innerHTML=tag;
+        }
+    });
+}   
+</script>    
+</head>
+<body>
+    <div id="content"></div>   
+    <button onClick="location.href='/client.html';">글쓰기</button>
+</body>
+</html>
+
+

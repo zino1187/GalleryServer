@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>    
+<style>
+ #title{width:500px;}  
+</style>
+<script src="Gallery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script> 
+$(function(){
+    // 동기방식 업로드
+    $($("button")[0]).click(function(){
+        regist();
+    });    
+
+    //비동기방식 업로드
+    $($("button")[1]).click(function(){
+        registAsync();
+    });    
+
+});
+
+function regist(){
+    var form = document.querySelector("form");
+    form.action="/regist"; //url
+    form.method="post";
+    form.encoding="multipart/form-data";
+    form.submit();
+}
+
+//등록함수
+function registAsync(){
+    //비동기 업로드 코드 작성....
+
+    //콜백함수에서 목록 호출!!
+    getList();
+}
+
+//목록 출력 
+function getList(){
+    //동적 부착!!
+    var gallery = new Gallery( 
+        document.getElementById("content") ,
+        "./images/bird.png",
+        "클래스를 이용한 동적객체 앵그리 버드");
+}
+</script>    
+</head>
+<body>
+<div style="background:yellow">    
+    <h2>업로드 폼</h2>
+    <form>
+        <input type="text" id="title" name="title" placeholder="제목"/>
+        <p>
+        <input type="file" name="myFile"/>
+    </form>    
+    <button>동기 업로드</button>
+    <button>비동기 업로드</button>
+</div>
+
+<div>
+    <h2> 데이터 목록 </h2>
+    <div id="content">
+
+
+
+    </div>
+</div>     
+
+</body>
+</html>
+
+
